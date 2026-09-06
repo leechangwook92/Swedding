@@ -29,32 +29,32 @@
   // ── Image Loading ──
   function loadImagesFromFolder(folder, maxAttempts = 50) {
     return new Promise(resolve => {
-        const images = [];
-        let current = 1;
-        let consecutiveFails = 0;
+      const images = [];
+      let current = 1;
+      let consecutiveFails = 0;
 
-        function tryNext() {
-            if (current > maxAttempts || consecutiveFails >= 3) {
-                resolve(images);
-                return;
-            }
-            const img = new Image();
-            const path = `images/${folder}/${current}.jpg`;
-            img.onload = function() {
-                images.push(path);
-                consecutiveFails = 0;
-                current++;
-                tryNext();
-            };
-            img.onerror = function() {
-                consecutiveFails++;
-                current++;
-                tryNext();
-            };
-            img.src = path;
+      function tryNext() {
+        if (current > maxAttempts || consecutiveFails >= 3) {
+          resolve(images);
+          return;
         }
+        const img = new Image();
+        const path = `images/${folder}/${current}.jpg`;
+        img.onload = function() {
+          images.push(path);
+          consecutiveFails = 0;
+          current++;
+          tryNext();
+        };
+        img.onerror = function() {
+          consecutiveFails++;
+          current++;
+          tryNext();
+        };
+        img.src = path;
+      }
 
-        tryNext();
+      tryNext();
     });
   }
 
@@ -194,7 +194,8 @@
 
     const heroNames = $('.hero-names');
     if (heroNames) {
-      heroNames.innerHTML = `${c.groom.nameEn}<span class="ampersand">&</span>${c.bride.nameEn}`;
+      heroNames.innerHTML = `
+<span class="ampersand">${c.groom.name} & ${c.bride.name}</span>`
     }
 
     const heroDate = $('.hero-date');
@@ -345,7 +346,7 @@
     }
 
     container.innerHTML = storyImages.map((src, i) =>
-      `<div class="story-image-item">
+        `<div class="story-image-item">
         <img src="${src}" alt="Our story ${i + 1}" loading="lazy">
       </div>`
     ).join('');
@@ -371,7 +372,7 @@
 
     function renderImages(count) {
       grid.innerHTML = images.slice(0, count).map((src, i) =>
-        `<div class="gallery-item" data-index="${i}">
+          `<div class="gallery-item" data-index="${i}">
           <img src="${src}" alt="Gallery photo ${i + 1}" loading="lazy">
         </div>`
       ).join('');
@@ -550,7 +551,7 @@
 
     if (list) {
       list.innerHTML = accounts.map(acc =>
-        `<div class="account-item">
+          `<div class="account-item">
           <div class="account-info">
             <div class="account-role">${acc.role}</div>
             <div class="account-detail">
@@ -575,15 +576,15 @@
 
   function initScrollAnimations() {
     scrollObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            scrollObserver.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              scrollObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
     );
 
     $$('.fade-in').forEach(el => scrollObserver.observe(el));
